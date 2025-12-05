@@ -87,7 +87,7 @@ const Login = () => {
         const { data: profiles, error: profileError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('roll_or_faculty_id', identifier)
+          .eq('roll_or_faculty_id', identifier.toUpperCase())
           .eq('role', role);
 
         if (profileError) throw profileError;
