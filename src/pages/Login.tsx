@@ -67,53 +67,56 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // For librarian, use hardcoded credentials
+      let email: string;
+      let profileToUse: any = null;
+
+      // For librarian, use specific email
       if (role === 'librarian') {
-        if (identifier !== 'Deepika@123' || password !== 'ITLibrarian@123') {
+        if (identifier !== 'Deepika@123') {
           toast({
-            title: 'Invalid Credentials',
-            description: 'Librarian username or password is incorrect.',
+            title: 'Invalid Username',
+            description: 'Librarian username is incorrect.',
             variant: 'destructive',
           });
           setLoading(false);
           return;
         }
+        email = 'librarian@itlibrary.local';
+      } else {
+        // For students and faculty, find profile first
+        const { data: profiles, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('roll_or_faculty_id', identifier)
+          .eq('role', role);
+
+        if (profileError) throw profileError;
+
+        if (!profiles || profiles.length === 0) {
+          toast({
+            title: 'Account Not Found',
+            description: `No ${role} account found with this ${getLabel().toLowerCase()}.`,
+            variant: 'destructive',
+          });
+          setLoading(false);
+          return;
+        }
+
+        profileToUse = profiles[0];
+
+        // Check account status
+        if (profileToUse.status === 'pending') {
+          navigate('/account-status', { state: { status: 'pending' } });
+          return;
+        }
+
+        if (profileToUse.status === 'rejected') {
+          navigate('/account-status', { state: { status: 'rejected' } });
+          return;
+        }
+
+        email = `${identifier.toLowerCase().replace(/[^a-z0-9]/g, '')}@library.local`;
       }
-
-      // First, find the user by roll_or_faculty_id or username
-      const { data: profiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('roll_or_faculty_id', identifier)
-        .eq('role', role);
-
-      if (profileError) throw profileError;
-
-      if (!profiles || profiles.length === 0) {
-        toast({
-          title: 'Account Not Found',
-          description: `No ${role} account found with this ${getLabel().toLowerCase()}.`,
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return;
-      }
-
-      const profile = profiles[0];
-
-      // Check account status
-      if (profile.status === 'pending') {
-        navigate('/account-status', { state: { status: 'pending' } });
-        return;
-      }
-
-      if (profile.status === 'rejected') {
-        navigate('/account-status', { state: { status: 'rejected' } });
-        return;
-      }
-
-      // Sign in with email constructed from identifier
-      const email = `${identifier.toLowerCase().replace(/[^a-z0-9]/g, '')}@library.local`;
       
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -130,9 +133,22 @@ const Login = () => {
         return;
       }
 
+      // Fetch profile after successful login for librarian
+      if (role === 'librarian') {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: librarianProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+          profileToUse = librarianProfile;
+        }
+      }
+
       toast({
         title: 'Welcome Back!',
-        description: `Logged in successfully as ${profile.name}`,
+        description: `Logged in successfully as ${profileToUse?.name || 'Librarian'}`,
       });
 
       // Navigate to appropriate dashboard

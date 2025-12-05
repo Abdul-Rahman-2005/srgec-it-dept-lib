@@ -1,1 +1,4 @@
 project_id = "kxehuegpkwiygchrxkwr"
+
+[functions.seed-librarian]
+verify_jwt = false
