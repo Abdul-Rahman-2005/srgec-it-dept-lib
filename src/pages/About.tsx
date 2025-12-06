@@ -104,7 +104,7 @@ const About = () => {
                 <div>
                   <h3 className="font-medium mb-1">Address</h3>
                   <p className="text-muted-foreground">
-                    IT Department Library, Main Building, Room 101
+                    IT Department Library, Main Block, Room No:M-329
                   </p>
                 </div>
               </div>
@@ -114,7 +114,7 @@ const About = () => {
                 </div>
                 <div>
                   <h3 className="font-medium mb-1">Phone</h3>
-                  <p className="text-muted-foreground">+91 1234 567 890</p>
+                  <p className="text-muted-foreground">+91 72889 57515</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 p-4 bg-card rounded-lg border border-border">
@@ -132,7 +132,7 @@ const About = () => {
                 </div>
                 <div>
                   <h3 className="font-medium mb-1">Librarian</h3>
-                  <p className="text-muted-foreground">Ms. Deepika - Head Librarian</p>
+                  <p className="text-muted-foreground">Ms. Deepika -Librarian-IT Dept</p>
                 </div>
               </div>
             </div>
