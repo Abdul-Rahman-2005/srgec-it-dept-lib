@@ -83,12 +83,12 @@ const Login = () => {
         }
         email = 'librarian@itlibrary.local';
       } else {
-        // For students and faculty, find profile first
+        // For students and faculty, use the SECURITY DEFINER function to bypass RLS
         const { data: profiles, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('roll_or_faculty_id', identifier.toUpperCase())
-          .eq('role', role);
+          .rpc('get_profile_for_login', {
+            p_identifier: identifier.toUpperCase(),
+            p_role: role
+          });
 
         if (profileError) throw profileError;
 

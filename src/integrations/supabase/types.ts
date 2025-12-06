@@ -139,6 +139,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_profile_for_login: {
+        Args: { p_identifier: string; p_role: string }
+        Returns: {
+          id: string
+          name: string
+          status: Database["public"]["Enums"]["user_status"]
+        }[]
+      }
       is_active_user: { Args: { _user_id: string }; Returns: boolean }
       is_librarian: { Args: { _user_id: string }; Returns: boolean }
     }
