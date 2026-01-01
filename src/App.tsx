@@ -22,6 +22,10 @@ import ManageBooks from "./pages/librarian/ManageBooks";
 import AddBook from "./pages/librarian/AddBook";
 import BorrowRecords from "./pages/librarian/BorrowRecords";
 import RecordBorrow from "./pages/librarian/RecordBorrow";
+import ManageMagazines from "./pages/librarian/ManageMagazines";
+import ManageJournals from "./pages/librarian/ManageJournals";
+import CSPProjectTitles from "./pages/librarian/CSPProjectTitles";
+import Reports from "./pages/librarian/Reports";
 
 // Student Pages
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -32,6 +36,11 @@ import StudentBorrowed from "./pages/student/StudentBorrowed";
 import FacultyDashboard from "./pages/faculty/FacultyDashboard";
 import FacultySearch from "./pages/faculty/FacultySearch";
 import FacultyBorrowed from "./pages/faculty/FacultyBorrowed";
+
+// Shared View Pages
+import ViewMagazines from "./pages/ViewMagazines";
+import ViewJournals from "./pages/ViewJournals";
+import ViewCSPProjects from "./pages/ViewCSPProjects";
 
 const queryClient = new QueryClient();
 
@@ -59,16 +68,26 @@ const App = () => (
             <Route path="/librarian/add-book" element={<AddBook />} />
             <Route path="/librarian/borrows" element={<BorrowRecords />} />
             <Route path="/librarian/record-borrow" element={<RecordBorrow />} />
+            <Route path="/librarian/magazines" element={<ManageMagazines />} />
+            <Route path="/librarian/journals" element={<ManageJournals />} />
+            <Route path="/librarian/csp-projects" element={<CSPProjectTitles />} />
+            <Route path="/librarian/reports" element={<Reports />} />
 
             {/* Student Routes */}
             <Route path="/student" element={<StudentDashboard />} />
             <Route path="/student/search" element={<StudentSearch />} />
             <Route path="/student/borrowed" element={<StudentBorrowed />} />
+            <Route path="/student/magazines" element={<ViewMagazines allowedRoles={['student']} />} />
+            <Route path="/student/journals" element={<ViewJournals allowedRoles={['student']} />} />
+            <Route path="/student/csp-projects" element={<ViewCSPProjects allowedRoles={['student']} />} />
 
             {/* Faculty Routes */}
             <Route path="/faculty" element={<FacultyDashboard />} />
             <Route path="/faculty/search" element={<FacultySearch />} />
             <Route path="/faculty/borrowed" element={<FacultyBorrowed />} />
+            <Route path="/faculty/magazines" element={<ViewMagazines allowedRoles={['faculty']} />} />
+            <Route path="/faculty/journals" element={<ViewJournals allowedRoles={['faculty']} />} />
+            <Route path="/faculty/csp-projects" element={<ViewCSPProjects allowedRoles={['faculty']} />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

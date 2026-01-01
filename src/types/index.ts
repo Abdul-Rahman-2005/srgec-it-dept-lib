@@ -41,3 +41,38 @@ export interface BorrowWithDetails extends Borrow {
   book?: Book;
   profile?: Profile;
 }
+
+export interface Magazine {
+  id: string;
+  title: string;
+  publisher: string;
+  issue_number: string;
+  publication_date: string;
+  category: string;
+  cover_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Journal {
+  id: string;
+  title: string;
+  publisher: string;
+  issn: string;
+  volume: string;
+  issue: string;
+  publication_year: number;
+  category: string;
+  cover_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CSPProjectFile {
+  id: string;
+  academic_year: string;
+  file_name: string;
+  file_path: string;
+  uploaded_by: string;
+  uploaded_at: string;
+}
