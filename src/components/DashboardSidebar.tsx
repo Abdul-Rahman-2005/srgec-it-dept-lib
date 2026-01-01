@@ -28,20 +28,30 @@ const librarianNavItems: NavItem[] = [
   { href: '/librarian/registrations', label: 'Registrations', icon: Users },
   { href: '/librarian/books', label: 'Manage Books', icon: Library },
   { href: '/librarian/add-book', label: 'Add Book', icon: BookPlus },
+  { href: '/librarian/magazines', label: 'Magazines', icon: BookOpen },
+  { href: '/librarian/journals', label: 'Journals', icon: BookOpen },
+  { href: '/librarian/csp-projects', label: 'CSP Projects', icon: ClipboardList },
   { href: '/librarian/borrows', label: 'Borrow Records', icon: ClipboardList },
   { href: '/librarian/record-borrow', label: 'Record Borrow', icon: BookMarked },
+  { href: '/librarian/reports', label: 'Reports', icon: ClipboardList },
 ];
 
 const studentNavItems: NavItem[] = [
   { href: '/student', label: 'Dashboard', icon: Home },
   { href: '/student/search', label: 'Search Books', icon: Search },
   { href: '/student/borrowed', label: 'My Books', icon: BookMarked },
+  { href: '/student/magazines', label: 'Magazines', icon: BookOpen },
+  { href: '/student/journals', label: 'Journals', icon: BookOpen },
+  { href: '/student/csp-projects', label: 'CSP Projects', icon: ClipboardList },
 ];
 
 const facultyNavItems: NavItem[] = [
   { href: '/faculty', label: 'Dashboard', icon: Home },
   { href: '/faculty/search', label: 'Search Books', icon: Search },
   { href: '/faculty/borrowed', label: 'My Books', icon: BookMarked },
+  { href: '/faculty/magazines', label: 'Magazines', icon: BookOpen },
+  { href: '/faculty/journals', label: 'Journals', icon: BookOpen },
+  { href: '/faculty/csp-projects', label: 'CSP Projects', icon: ClipboardList },
 ];
 
 export function DashboardSidebar() {

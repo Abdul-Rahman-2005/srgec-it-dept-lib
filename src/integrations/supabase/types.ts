@@ -101,6 +101,111 @@ export type Database = {
           },
         ]
       }
+      csp_project_files: {
+        Row: {
+          academic_year: string
+          file_name: string
+          file_path: string
+          id: string
+          uploaded_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          academic_year: string
+          file_name: string
+          file_path: string
+          id?: string
+          uploaded_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          academic_year?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          uploaded_at?: string
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
+      journals: {
+        Row: {
+          category: string
+          cover_url: string | null
+          created_at: string
+          id: string
+          issn: string
+          issue: string
+          publication_year: number
+          publisher: string
+          title: string
+          updated_at: string
+          volume: string
+        }
+        Insert: {
+          category: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issn: string
+          issue: string
+          publication_year: number
+          publisher: string
+          title: string
+          updated_at?: string
+          volume: string
+        }
+        Update: {
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issn?: string
+          issue?: string
+          publication_year?: number
+          publisher?: string
+          title?: string
+          updated_at?: string
+          volume?: string
+        }
+        Relationships: []
+      }
+      magazines: {
+        Row: {
+          category: string
+          cover_url: string | null
+          created_at: string
+          id: string
+          issue_number: string
+          publication_date: string
+          publisher: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issue_number: string
+          publication_date: string
+          publisher: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issue_number?: string
+          publication_date?: string
+          publisher?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
