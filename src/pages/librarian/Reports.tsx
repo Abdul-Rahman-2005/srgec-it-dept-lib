@@ -92,11 +92,11 @@ const Reports = () => {
 
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, name, role')
+        .select('id, name, role, roll_or_faculty_id')
         .in('id', userIds);
 
       const bookMap = new Map(books?.map(b => [b.id, b.title]) || []);
-      const profileMap = new Map(profiles?.map(p => [p.id, { name: p.name, role: p.role }]) || []);
+      const profileMap = new Map(profiles?.map(p => [p.id, { name: p.name, role: p.role, roll_or_faculty_id: p.roll_or_faculty_id }]) || []);
 
       const formattedData = borrows.map((borrow) => {
         const profile = profileMap.get(borrow.user_id);
@@ -106,6 +106,7 @@ const Reports = () => {
 
         return {
           'User Name': profile?.name || 'Unknown',
+          'Roll No / Faculty ID': profile?.roll_or_faculty_id || '',
           'User Role': profile?.role || 'Unknown',
           'Book Title': bookMap.get(borrow.book_id) || 'Unknown',
           'Issue Date': new Date(borrow.borrow_date).toLocaleDateString(),
@@ -129,7 +130,7 @@ const Reports = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, name, role, phone, status, created_at')
+        .select('id, name, role, phone, status, created_at, roll_or_faculty_id')
         .eq('status', 'active')
         .order('name');
 
@@ -143,6 +144,7 @@ const Reports = () => {
       const formattedData = data.map((user) => ({
         'User ID': user.id,
         'Name': user.name,
+        'Roll No / Faculty ID': user.roll_or_faculty_id || '',
         'Role': user.role.charAt(0).toUpperCase() + user.role.slice(1),
         'Phone': user.phone,
         'Account Status': user.status.charAt(0).toUpperCase() + user.status.slice(1),
