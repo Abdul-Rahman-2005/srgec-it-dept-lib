@@ -18,6 +18,7 @@ interface BorrowRecord {
   id: string;
   user_id: string;
   book_id: string;
+  book_code: string | null;
   borrow_date: string;
   due_date: string;
   returned_at: string | null;
@@ -154,6 +155,11 @@ const BorrowRecords = () => {
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-serif font-semibold text-lg">{borrow.book.title}</h3>
+                        {borrow.book_code && (
+                          <Badge variant="outline" className="font-mono">
+                            {borrow.book_code}
+                          </Badge>
+                        )}
                         <Badge variant={borrow.status === 'borrowed' ? 'default' : 'secondary'}>
                           {borrow.status === 'borrowed' ? 'Borrowed' : 'Returned'}
                         </Badge>

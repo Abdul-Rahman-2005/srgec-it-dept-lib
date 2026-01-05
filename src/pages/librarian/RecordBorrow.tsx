@@ -21,6 +21,8 @@ const RecordBorrow = () => {
   const [users, setUsers] = useState<Profile[]>([]);
   const [selectedBook, setSelectedBook] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
+  const [bookCode, setBookCode] = useState('');
+  const [bookCodeError, setBookCodeError] = useState('');
   const [bookSearch, setBookSearch] = useState('');
   const [userSearch, setUserSearch] = useState('');
   const [loading, setLoading] = useState(false);
@@ -79,6 +81,34 @@ const RecordBorrow = () => {
     return () => clearTimeout(timer);
   }, [userSearch]);
 
+  const validateBookCode = async (code: string): Promise<boolean> => {
+    if (!code.trim()) {
+      setBookCodeError('Book code is required');
+      return false;
+    }
+
+    // Check if the book code is already borrowed and not returned
+    const { data, error } = await supabase
+      .from('borrows')
+      .select('id')
+      .eq('book_code', code.trim())
+      .eq('status', 'borrowed')
+      .maybeSingle();
+
+    if (error) {
+      setBookCodeError('Error validating book code');
+      return false;
+    }
+
+    if (data) {
+      setBookCodeError('This book code is already issued and not yet returned');
+      return false;
+    }
+
+    setBookCodeError('');
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -91,7 +121,29 @@ const RecordBorrow = () => {
       return;
     }
 
+    if (!bookCode.trim()) {
+      setBookCodeError('Book code is required');
+      toast({
+        title: 'Error',
+        description: 'Please enter a book code',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setLoading(true);
+
+    // Validate book code before proceeding
+    const isValidCode = await validateBookCode(bookCode);
+    if (!isValidCode) {
+      setLoading(false);
+      toast({
+        title: 'Error',
+        description: bookCodeError || 'Invalid book code',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     try {
       const dueDate = new Date();
@@ -100,12 +152,19 @@ const RecordBorrow = () => {
       const { error } = await supabase.from('borrows').insert({
         book_id: selectedBook,
         user_id: selectedUser,
+        book_code: bookCode.trim(),
         borrow_date: new Date().toISOString().split('T')[0],
         due_date: dueDate.toISOString().split('T')[0],
         status: 'borrowed',
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === '23505') {
+          setBookCodeError('This book code is already issued and not yet returned');
+          throw new Error('This book code is already issued and not yet returned');
+        }
+        throw error;
+      }
 
       // Get book and user details for SMS
       const selectedBookData = books.find(b => b.id === selectedBook);
@@ -132,6 +191,8 @@ const RecordBorrow = () => {
 
       setSelectedBook('');
       setSelectedUser('');
+      setBookCode('');
+      setBookCodeError('');
       setBookSearch('');
       setUserSearch('');
       setBooks([]);
@@ -264,9 +325,32 @@ const RecordBorrow = () => {
                 )}
               </div>
 
+              {/* Book Code Field */}
+              {selectedBook && (
+                <div className="space-y-2">
+                  <Label htmlFor="bookCode">Book Code Number *</Label>
+                  <Input
+                    id="bookCode"
+                    placeholder="Enter unique book code (e.g., B001, BK-2024-001)"
+                    value={bookCode}
+                    onChange={(e) => {
+                      setBookCode(e.target.value);
+                      setBookCodeError('');
+                    }}
+                    className={bookCodeError ? 'border-destructive' : ''}
+                  />
+                  {bookCodeError && (
+                    <p className="text-sm text-destructive">{bookCodeError}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Enter the unique code printed on the book copy being issued.
+                  </p>
+                </div>
+              )}
+
               {/* Due Date Info */}
-              {selectedBook && selectedUser && (
-                <div className="p-4 bg-amber/10 border border-amber/20 rounded-lg">
+              {selectedBook && selectedUser && bookCode && (
+                <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
                   <p className="text-sm">
                     <strong>Due Date:</strong> {new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
                     <br />
@@ -277,7 +361,7 @@ const RecordBorrow = () => {
                 </div>
               )}
 
-              <Button type="submit" size="lg" disabled={loading || !selectedBook || !selectedUser}>
+              <Button type="submit" size="lg" disabled={loading || !selectedBook || !selectedUser || !bookCode.trim()}>
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                 Record Borrow
               </Button>
