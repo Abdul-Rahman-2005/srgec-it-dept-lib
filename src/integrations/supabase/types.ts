@@ -55,6 +55,7 @@ export type Database = {
       }
       borrows: {
         Row: {
+          book_code: string | null
           book_id: string
           borrow_date: string
           created_at: string
@@ -65,6 +66,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          book_code?: string | null
           book_id: string
           borrow_date?: string
           created_at?: string
@@ -75,6 +77,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          book_code?: string | null
           book_id?: string
           borrow_date?: string
           created_at?: string

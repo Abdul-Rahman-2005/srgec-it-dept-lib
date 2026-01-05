@@ -109,6 +109,7 @@ const Reports = () => {
           'Roll No / Faculty ID': profile?.roll_or_faculty_id || '',
           'User Role': profile?.role || 'Unknown',
           'Book Title': bookMap.get(borrow.book_id) || 'Unknown',
+          'Book Code': borrow.book_code || '',
           'Issue Date': new Date(borrow.borrow_date).toLocaleDateString(),
           'Due Date': dueDate.toLocaleDateString(),
           'Return Date': borrow.returned_at ? new Date(borrow.returned_at).toLocaleDateString() : '-',
@@ -212,7 +213,7 @@ const Reports = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                Includes: User Name, Role, Book Title, Issue Date, Due Date, Return Date, Status
+                Includes: User Name, Role, Book Title, Book Code, Issue Date, Due Date, Return Date, Status
               </p>
               <Button onClick={handleBorrowsReport} disabled={loadingBorrows} className="w-full">
                 {loadingBorrows ? (
